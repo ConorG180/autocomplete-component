@@ -4,10 +4,12 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import { getSuggestions } from "../../requests/requests";
 import "./SearchBar.css";
+import useDebounce from "../../hooks/useDebounce";
 
 const searchBar: React.FC = () => {
     const [query, setQuery] = useState("");
     const [suggestions, setSuggestions] = useState([])
+    const debouncedQuery = useDebounce(query, 300);
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setQuery(e.target.value);
@@ -28,7 +30,7 @@ const searchBar: React.FC = () => {
         };
 
         fetchSuggestions();
-    }, [query]);
+    }, [debouncedQuery]);
 
     const handleSearch = () => {
         console.log(query);
