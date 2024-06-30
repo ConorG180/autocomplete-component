@@ -23,10 +23,16 @@
 .suggestion-item {
     width: 90%;
     padding: 5px;
-    display: flex;
-    align-items: center;
 }
 
 .suggestion-item .icon {
     margin-right: 10px;
+}
+
+.no-results, .loading {
+    padding: 5px;
+    text-align: center;
+    font-family: Arial, Helvetica, sans-serif;
+    margin: 15px auto;
+    width: 87.5%;
 }

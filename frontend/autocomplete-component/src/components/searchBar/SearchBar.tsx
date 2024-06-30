@@ -10,6 +10,7 @@ const searchBar: React.FC = () => {
     const [query, setQuery] = useState("");
     const [suggestions, setSuggestions] = useState([])
     const debouncedQuery = useDebounce(query, 300);
+    const [loading, setLoading] = useState(false);
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setQuery(e.target.value);
@@ -17,12 +18,15 @@ const searchBar: React.FC = () => {
 
     useEffect(() => {
         const fetchSuggestions = async () => {
+            setLoading(true)
             if (query) {
                 try {
                     const suggestions = await getSuggestions(query);
                     setSuggestions(suggestions);
+                    setLoading(false);
                 } catch (error) {
                     console.error(error);
+                    setLoading(false);
                 }
             } else {
                 setSuggestions([]);
@@ -51,7 +55,7 @@ const searchBar: React.FC = () => {
                     <FontAwesomeIcon icon={faSearch} size="xl" />
                 </button>
             </div>
-            {query && <Suggestions suggestions={suggestions} />}
+            {query && <Suggestions suggestions={suggestions} loading={loading} />}
         </div>
     );
 };
