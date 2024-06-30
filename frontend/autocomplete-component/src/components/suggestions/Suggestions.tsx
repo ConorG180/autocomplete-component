@@ -13,6 +13,16 @@ type SuggestionsProps = {
 
 const Suggestions: React.FC<SuggestionsProps> = ({ suggestions, loading }) => {
 
+    const getTag = (suggestion: Suggestion) => {
+        if ("name" in suggestion) {
+            return <span className="tag artist-tag">Artist</span>;
+        }
+        if ("description" in suggestion) {
+            return <span className="tag album-tag">Album</span>;
+        }
+        return <span className="tag song-tag">Song</span>;
+    };
+
     return (
         // In reality, it"s crucial to use an ID or other unique identifier rather than index for key when using map
         //For demo purposes, index was chosen
@@ -27,8 +37,20 @@ const Suggestions: React.FC<SuggestionsProps> = ({ suggestions, loading }) => {
                 <ul data-testid="suggestions-list" className="suggestions-list">
                     {suggestions.map((suggestion, index) => (
                         <li key={index} className="suggestion-item">
-                            <FontAwesomeIcon icon={faSearch} className="icon" />
-                            {"name" in suggestion ? suggestion.name : suggestion.title}
+                            <div className="suggestion-text">
+                                <FontAwesomeIcon icon={faSearch} className="icon" />
+                                {"name" in suggestion ? (
+                                    suggestion.name
+                                ) : (
+                                    <>
+                                        {suggestion.title}
+                                        {"length" in suggestion && (
+                                            <small className="song-length"> ({suggestion.length})</small>
+                                        )}
+                                    </>
+                                )}
+                            </div>
+                            {getTag(suggestion)}
                         </li>
                     ))}
                 </ul>
