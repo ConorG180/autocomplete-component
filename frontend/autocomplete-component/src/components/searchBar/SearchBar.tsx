@@ -1,15 +1,34 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Suggestions from "../suggestions/Suggestions";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
+import { getSuggestions } from "../../requests/requests";
 import "./SearchBar.css";
 
 const searchBar: React.FC = () => {
     const [query, setQuery] = useState("");
+    const [suggestions, setSuggestions] = useState([])
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setQuery(e.target.value);
     };
+
+    useEffect(() => {
+        const fetchSuggestions = async () => {
+            if (query) {
+                try {
+                    const suggestions = await getSuggestions(query);
+                    setSuggestions(suggestions);
+                } catch (error) {
+                    console.error(error);
+                }
+            } else {
+                setSuggestions([]);
+            }
+        };
+
+        fetchSuggestions();
+    }, [query]);
 
     const handleSearch = () => {
         console.log(query);
@@ -30,7 +49,7 @@ const searchBar: React.FC = () => {
                     <FontAwesomeIcon icon={faSearch} size="xl" />
                 </button>
             </div>
-            {query && <Suggestions query={query} />}
+            {query && <Suggestions suggestions={suggestions} />}
         </div>
     );
 };
